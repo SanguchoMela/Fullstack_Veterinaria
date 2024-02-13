@@ -16,7 +16,8 @@ Go to the project directory
 ## Backend
 
 ### Run Locally
-Go to the project directory
+
+Go to the component's folder 
 
 ```bash
   cd backend
@@ -35,7 +36,9 @@ Start the server
 ```
 
 ### Enviroment Variables
+
 To run this folder, you will need to add the following environment variables to your `.env` file
+
 #### Database
 - `MONGODB_URI`
 
@@ -56,7 +59,7 @@ To run this folder, you will need to add the following environment variables to 
 
 ### Run Locally
 
-Go to the project directory
+Go to the component's folder
 
 ```bash
   cd frontend
