@@ -1,26 +1,19 @@
 import { useContext, useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
-import Mensaje from "./Alertas/Mensaje"
-import JSConfetti from 'js-confetti'
+import Mensaje from "./Alertas/Mensaje";
 
-export const Formulario = ({paciente}) => {
-
-    const jsConfetti = new JSConfetti()
-    jsConfetti.addConfetti({
-        emojis: ['😺', '🐵', '🐶', '🦝', '🐮', '🐷', '🐭', '🐹', '🐻‍❄️', '🐨', '🐸', '🐴','🐔', '🐠', '🦜', '🐥'],
-    })
+export const Formulario = () => {
 
     const navigate = useNavigate()
     const [mensaje, setMensaje] = useState({})
     const [form, setform] = useState({
-        nombre: paciente?.nombre ??"",
-        propietario: paciente?.propietario ??"",
-        email: paciente?.email ??"",
-        celular: paciente?.celular ??"",
-        salida:  new Date(paciente?.salida).toLocaleDateString('en-CA', {timeZone: 'UTC'}) ?? "",
-        convencional: paciente?.convencional ??"",
-        sintomas: paciente?.sintomas ??""
+        nombre: "",
+        propietario: "",
+        email: "",
+        celular: "",
+        convencional: "",
+        sintomas: ""
     })
 
     const handleChange = (e) => {
@@ -31,41 +24,25 @@ export const Formulario = ({paciente}) => {
 
     const handleSubmit = async(e) => { 
         e.preventDefault()
-
-        if (paciente?._id) {
+        try {
             const token = localStorage.getItem('token')
-            const url = `${import.meta.env.VITE_BACKEND_URL}/paciente/actualizar/${paciente?._id}`
-            const options = {
+            const url = `${import.meta.env.VITE_BACKEND_URL}/paciente/registro`
+            const options={
                 headers: {
-                    method: 'PUT',
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
             }
-            await axios.put(url, form, options)
-            navigate('/dashboard/listar')
-        }
-        else {
-            try {
-                const token = localStorage.getItem('token')
-                const url = `${import.meta.env.VITE_BACKEND_URL}/paciente/registro`
-                const options={
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-                await axios.post(url,form,options)
-                            setMensaje({ respuesta:"Paciente registrado con exito y correo enviado", tipo: true })
-                setTimeout(() => {
-                    navigate('/dashboard/listar');
-                }, 3000);
-            } catch (error) {
-                            setMensaje({ respuesta: error.response.data.msg, tipo: false })
-                setTimeout(() => {
-                    setMensaje({})
-                }, 3000);
-            }
+            await axios.post(url,form,options)
+						setMensaje({ respuesta:"paciente registrado con exito y correo enviado", tipo: true })
+            setTimeout(() => {
+                navigate('/dashboard/listar');
+            }, 3000);
+        } catch (error) {
+						setMensaje({ respuesta: error.response.data.msg, tipo: false })
+            setTimeout(() => {
+                setMensaje({})
+            }, 3000);
         }
     }
 
@@ -83,7 +60,6 @@ export const Formulario = ({paciente}) => {
                     className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md mb-5'
                     placeholder='Nombre de la mascota'
                     name='nombre'
-                    value={form.nombre}
                     onChange={handleChange}
                 />
             </div>
@@ -97,7 +73,6 @@ export const Formulario = ({paciente}) => {
                     className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md mb-5'
                     placeholder='Nombre del propietario'
                     name='propietario'
-                    value={form.propietario}
                     onChange={handleChange}
                 />
             </div>
@@ -109,9 +84,8 @@ export const Formulario = ({paciente}) => {
                     id='email'
                     type="email"
                     className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md mb-5'
-                    placeholder='Email del propietario'
+                    placeholder='E-mail del propietario'
                     name='email'
-                    value={form.email}
                     onChange={handleChange}
                 />
             </div>
@@ -125,7 +99,6 @@ export const Formulario = ({paciente}) => {
                     className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md mb-5'
                     placeholder='Celular del propietario'
                     name='celular'
-                    value={form.celular}
                     onChange={handleChange}
                 />
             </div>
@@ -139,7 +112,6 @@ export const Formulario = ({paciente}) => {
                     className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md mb-5'
                     placeholder='Convencional del propietario'
                     name='convencional'
-                    value={form.convencional}
                     onChange={handleChange}
                 />
             </div>
@@ -153,7 +125,6 @@ export const Formulario = ({paciente}) => {
                     className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md mb-5'
                     placeholder='Salida'
                     name='salida'
-                    value={form.salida}
                     onChange={handleChange}
                 />
             </div>
@@ -167,7 +138,6 @@ export const Formulario = ({paciente}) => {
                     className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md mb-5'
                     placeholder='Ingrese los síntomas de la mascota'
                     name='sintomas'
-                    value={form.sintomas}
                     onChange={handleChange}
                 />
             </div>
@@ -177,7 +147,7 @@ export const Formulario = ({paciente}) => {
                 className='bg-gray-600 w-full p-3 
                     text-slate-300 uppercase font-bold rounded-lg 
                     hover:bg-gray-900 cursor-pointer transition-all'
-                    value={paciente?._id ? 'Actualizar paciente' : 'Registrar paciente'} />
+                value='Registrar' />
 
         </form>
     )
